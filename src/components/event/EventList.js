@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
-import { getGames } from "./GameManager.js";
+import { getEvents } from "./EventManager";
 
-export const GameList = (props) => {
-  const [games, setGames] = useState([]);
+export const EventList = (props) => {
+  const [events, setEvents] = useState([]);
   const history = useHistory();
   useEffect(() => {
-    getGames().then((data) => setGames(data));
+    getEvents().then((data) => setEvents(data));
   }, []);
 
   return (
@@ -14,23 +14,27 @@ export const GameList = (props) => {
       <button
         className="btn btn-2 btn-sep icon-create"
         onClick={() => {
-          history.push("/games/new");
+          history.push("/events/new");
         }}
       >
-        Register New Game
+        Register New Event
       </button>
 
-      {games.map((game) => {
+      {events.map((game) => {
         return (
           <section key={`game--${game.id}`} className="game">
             <div className="game__title">
-              {game.title} by {game.maker}
+              {game.description} by {game.organizer.bio} @ {game.date}{" "}
+              {game.time}
+            </div>
+            <div className="game__title">
+              {game.game.title} by {game.game.maker}
             </div>
             <div className="game__players">
-              {game.number_of_players} players needed
+              {game.game.number_of_players} players needed
             </div>
             <div className="game__skillLevel">
-              Skill level is {game.skill_level}
+              Skill level is {game.game.skill_level}
             </div>
           </section>
         );
