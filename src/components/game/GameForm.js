@@ -92,8 +92,6 @@ export const GameForm = () => {
         </div>
       </fieldset>
 
-      {/* TODO: create the rest of the input fields */}
-
       <button
         type="submit"
         onClick={(evt) => {

@@ -8,7 +8,7 @@ export const EventForm = () => {
 
   const [currentEvent, setEvent] = useState({
     gameId: 0,
-    organizerId: parseInt(localStorage.getItem("lu_token")),
+    organizerId: localStorage.getItem("lu_token"),
     description: "",
     date: "",
     time: "",
@@ -20,7 +20,7 @@ export const EventForm = () => {
   }, []);
 
   const changeEventState = (event) => {
-    const newGameState = { ...currentGame };
+    const newGameState = { ...currentEvent };
     newGameState[event.target.name] = event.target.value;
     setEvent(newGameState);
   };
@@ -56,18 +56,40 @@ export const EventForm = () => {
             required
           ></input>
         </div>
+        <div>
+          <label htmlFor="date">Select a Date: </label>
+          <input
+            type="date"
+            name="date"
+            className="form-control"
+            value={currentEvent.date}
+            onChange={changeEventState}
+            required
+          />
+          <label htmlFor="time">Select a Time: </label>
+          <input
+            type="time"
+            name="time"
+            className="form-control"
+            value={currentEvent.time}
+            onChange={changeEventState}
+            required
+          />
+        </div>
       </fieldset>
-
-      {/* TODO: Create the rest of the input fields */}
 
       <button
         type="submit"
         onClick={(evt) => {
           evt.preventDefault();
-
-          // TODO: Call the createEvent function and pass it the event object
-
-          // TODO: Once event is created, redirect user to event list
+          const event = {
+            gameId: parseInt(currentEvent.gameId),
+            organizerId: localStorage.getItem("lu_token"),
+            description: currentEvent.description,
+            date: currentEvent.date,
+            time: currentEvent.time,
+          };
+          createEvent(event).then(() => history.push("/events"));
         }}
         className="btn btn-primary"
       >

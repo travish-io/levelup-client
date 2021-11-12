@@ -1,12 +1,17 @@
 import React, { useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
-import { getEvents } from "./EventManager";
+import { getEvents, joinEvent, leaveEvent } from "./EventManager";
 
 export const EventList = (props) => {
   const [events, setEvents] = useState([]);
   const history = useHistory();
-  useEffect(() => {
+
+  const eventFetcher = () => {
     getEvents().then((data) => setEvents(data));
+  };
+
+  useEffect(() => {
+    eventFetcher();
   }, []);
 
   return (
@@ -20,22 +25,29 @@ export const EventList = (props) => {
         Register New Event
       </button>
 
-      {events.map((game) => {
+      {events.map((event) => {
         return (
-          <section key={`game--${game.id}`} className="game">
-            <div className="game__title">
-              {game.description} by {game.organizer.bio} @ {game.date}{" "}
-              {game.time}
+          <section key={event.id} className="registration">
+            <div className="registration__game">{event.game.title}</div>
+            <div>{event.description}</div>
+            <div>
+              {event.date} @ {event.time}
             </div>
-            <div className="game__title">
-              {game.game.title} by {game.game.maker}
-            </div>
-            <div className="game__players">
-              {game.game.number_of_players} players needed
-            </div>
-            <div className="game__skillLevel">
-              Skill level is {game.game.skill_level}
-            </div>
+            {event.joined ? (
+              <button
+                className="btn btn-3"
+                onClick={() => leaveEvent(event.id).then(() => eventFetcher())}
+              >
+                Leave
+              </button>
+            ) : (
+              <button
+                className="btn btn-2"
+                onClick={() => joinEvent(event.id).then(() => eventFetcher())}
+              >
+                Join
+              </button>
+            )}
           </section>
         );
       })}
